@@ -14,7 +14,7 @@ const VehiclePanel = (props) => {
             }} className='flex items-center justify-center border-2 active:border-black  mb-2 rounded-xl w-full p-4 '>
                 <img className='h-10 ' src="https://swyft.pl/wp-content/uploads/2023/05/how-many-people-can-a-uberx-take.jpg" alt="" />
                 <div className=' w-2/4'>
-                    <h4 className='font-medium text-base'>UberGo <span><i className="ri-user-3-fill"></i>4</span></h4>
+                    <h4 className='font-medium text-base'>RideNowGo <span><i className="ri-user-3-fill"></i>4</span></h4>
                     <h5 className='font-medium text-sm'>2 mins away </h5>
                     <p className='font-normal text-xs text-gray-600'>Affordable, compact rides</p>
                 </div>
@@ -40,7 +40,7 @@ const VehiclePanel = (props) => {
             }} className='flex border-2 active:border-black mb-2 rounded-xl w-full p-3  items-center justify-centre'>
                 <img className='h-10' src="https://upload.wikimedia.org/wikipedia/commons/5/52/Auto.jpeg" alt="" />
                 <div className='ml-2 w-1/2'>
-                    <h4 className='font-medium text-base'>UberAuto <span><i className="ri-user-3-fill"></i>3</span></h4>
+                    <h4 className='font-medium text-base'>RideNowAuto <span><i className="ri-user-3-fill"></i>3</span></h4>
                     <h5 className='font-medium text-sm'>3 mins away </h5>
                     <p className='font-normal text-xs text-gray-600'>Affordable Auto rides</p>
                 </div>

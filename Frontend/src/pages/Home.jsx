@@ -12,7 +12,6 @@ import { SocketContext } from "../Context/SocketContext.jsx";
 import { UserDataContext } from "../Context/UserContext.jsx";
 import { useNavigate } from "react-router-dom";
 
-
 import axios from "axios";
 const Home = () => {
   const [panelOpen, setPanelOpen] = useState(false);
@@ -41,49 +40,52 @@ const Home = () => {
   const { user } = useContext(UserDataContext);
   const navigate = useNavigate();
 
-
   useEffect(() => {
     console.log("👀 Full user object:", user);
-  
+
     // Try multiple ways to get the ID
-    const userId =
-      user?._id ||
-      user?.id ||
-      user?.user?._id ||
-      user?._doc?._id;
-  
+    const userId = user?._id || user?.id || user?.user?._id || user?._doc?._id;
+
     console.log("🧩 Extracted userId:", userId);
-  
+
     if (!userId) {
       console.warn("❌ No userId found, skipping socket.emit.");
       return;
     }
-  
+
     const payload = {
       userId,
       userType: "user",
     };
-  
+
     console.log("✅ Emitting join with payload:", payload);
     socket.emit("join", payload);
-  }, [user]);
-  
+  }, [socket, user]);
 
-  socket.on("ride-confirmed", (ride) => {
-    console.log("Ride confirmed:", ride);
-    console.log("OTP", ride.otp);
-    setVehicleFound(false);
-    setWaitingForDriver(true);
-    setRide(ride);
-  });
+  useEffect(() => {
+    const handleRideConfirmed = (ride) => {
+      console.log("Ride confirmed:", ride);
+      console.log("OTP", ride.otp);
+      setVehicleFound(false);
+      setWaitingForDriver(true);
+      setRide(ride);
+    };
 
-  socket.on("ride-started", (ride) => {
-    setVehicleFound(false);
-    setWaitingForDriver(true);
-    setRide(ride);
-    navigate('/riding')
-    navigate('/riding', { state: { ride } })
-  })
+    const handleRideStarted = (ride) => {
+      setVehicleFound(false);
+      setWaitingForDriver(true);
+      setRide(ride);
+      navigate("/riding", { state: { ride } });
+    };
+
+    socket.on("ride-confirmed", handleRideConfirmed);
+    socket.on("ride-started", handleRideStarted);
+
+    return () => {
+      socket.off("ride-confirmed", handleRideConfirmed);
+      socket.off("ride-started", handleRideStarted);
+    };
+  }, [socket, navigate]);
 
   const handlePickupChange = async (e) => {
     setPickup(e.target.value);
@@ -95,13 +97,13 @@ const Home = () => {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-        }
+        },
       );
       setPickupSuggestions(response.data.suggestions || []); // Ensure correct access to suggestions
     } catch (error) {
       console.error(
         "Error fetching pickup suggestions:",
-        error.response ? error.response.data : error.message
+        error.response ? error.response.data : error.message,
       );
     }
   };
@@ -116,13 +118,13 @@ const Home = () => {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-        }
+        },
       );
       setDestinationSuggestions(response.data.suggestions || []); // Ensure correct access to suggestions
     } catch (error) {
       console.error(
         "Error fetching destination suggestions:",
-        error.response ? error.response.data : error.message
+        error.response ? error.response.data : error.message,
       );
     }
   };
@@ -153,7 +155,7 @@ const Home = () => {
         });
       }
     },
-    [panelOpen]
+    [panelOpen],
   );
 
   useGSAP(
@@ -168,7 +170,7 @@ const Home = () => {
         });
       }
     },
-    [vehiclePanelOpen]
+    [vehiclePanelOpen],
   );
 
   useGSAP(
@@ -183,7 +185,7 @@ const Home = () => {
         });
       }
     },
-    [ConfirmRidePanel]
+    [ConfirmRidePanel],
   );
 
   useGSAP(
@@ -198,7 +200,7 @@ const Home = () => {
         });
       }
     },
-    [vehicleFound]
+    [vehicleFound],
   );
 
   useGSAP(
@@ -213,7 +215,7 @@ const Home = () => {
         });
       }
     },
-    [waitingForDriver]
+    [waitingForDriver],
   );
 
   async function findTrip() {
@@ -222,7 +224,7 @@ const Home = () => {
       setVehiclePanelOpen(true);
       setPanelOpen(false);
 
-      const response =   await axios.get(
+      const response = await axios.get(
         `${import.meta.env.VITE_BASE_URL}/ride/get-fare`,
         {
           params: {
@@ -232,7 +234,7 @@ const Home = () => {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-        }
+        },
       );
 
       console.log("Fare data received:", response.data);
@@ -240,7 +242,7 @@ const Home = () => {
     } catch (error) {
       console.error(
         "Error fetching fare:",
-        error.response ? error.response.data : error.message
+        error.response ? error.response.data : error.message,
       );
     }
   }
@@ -258,26 +260,22 @@ const Home = () => {
           headers: {
             Authorization: `Bearer ${localStorage.getItem("token")}`,
           },
-        }
+        },
       );
 
       console.log("Ride created successfully:", response.data);
-      setRide(response.data); // Store the ride details in state
+      setRide(response.data.ride); // Store the ride details in state
     } catch (error) {
       console.error(
         "Error creating ride:",
-        error.response ? error.response.data : error.message
+        error.response ? error.response.data : error.message,
       );
     }
   }
 
   return (
     <div className="h-screen relative overflow-hidden">
-      <img
-        className="w-16 absolute left-5 top-5"
-        src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png"
-        alt=""
-      />
+      <img className="w-16 absolute left-5 top-5" src="" alt="" />
       <div className="h-screen w-screen">
         {/* image for temporary use  */}
         <div className="h-3/5">
@@ -400,23 +398,20 @@ const Home = () => {
           ride={ride}
           pickup={pickup}
           destination={destination}
-           otp={ride?.otp}
+          otp={ride?.otp}
           fare={ride?.fare}
           setVehicleFound={setVehicleFound}
-          setWaitingForDriver={setWaitingForDriver} 
-         waitingForDriver={waitingForDriver}
-
-         
+          setWaitingForDriver={setWaitingForDriver}
+          waitingForDriver={waitingForDriver}
         />
 
-                {/* <WaitingForDriver
+        {/* <WaitingForDriver
                     ride={ride}
                     setVehicleFound={setVehicleFound}
                     setWaitingForDriver={setWaitingForDriver}
                     waitingForDriver={waitingForDriver} /> */}
-            </div>
       </div>
-    
+    </div>
   );
 };
 

@@ -21,11 +21,10 @@ const UserSignup = () => {
       password: password,
     };
 
-    // Corrected URL to point to the signup endpoint
-    console.log(import.meta.env.VITE_BASE_URL);  // This should print the correct URL, e.g., http://localhost:5000
-
-    const response = await axios.post(`${import.meta.env.VITE_BASE_URL}/users/register`, newUser);
-    
+    const response = await axios.post(
+      `${import.meta.env.VITE_BASE_URL}/users/register`,
+      newUser
+    );
 
     if (response.status === 201) {
       const data = response.data;
@@ -44,10 +43,13 @@ const UserSignup = () => {
     <div>
       <div className="p-7 h-screen flex flex-col justify-between">
         <div>
-          <img
+          {/* <img
             src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png"
             alt=""
-          />
+          /> */}
+
+                              <h1 className='text-4xl font-extrabold tracking-tight text-black'>Ride<span className='text-[#10b461]'>Now</span></h1>
+
           <form onSubmit={(e) => {
             submitHandler(e)
           }}>

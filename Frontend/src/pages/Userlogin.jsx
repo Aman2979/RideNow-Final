@@ -23,7 +23,7 @@ const Userlogin = () => {
        
         if (response.status === 200) {
             const data = response.data;
-            setUser(data.User)
+            setUser(data.user)
             console.log(data)
             localStorage.setItem('token', data.token)
            
@@ -39,12 +39,13 @@ const Userlogin = () => {
     return (
         <div>
             <div className='p-7 h-screen flex flex-col justify-between'>
-                <div><img src="https://upload.wikimedia.org/wikipedia/commons/c/cc/Uber_logo_2018.png" alt="" />
-                <h1>.</h1>
-                <br />
-                <form onSubmit={(e) => {
-            submitHandler(e)
-          }}>
+                <div>
+                    {/* Replaced Uber image with RideNow branding */}
+                    <h1 className='text-4xl font-extrabold tracking-tight text-black'>Ride<span className='text-[#10b461]'>Now</span></h1>
+                    <br />
+                    <form onSubmit={(e) => {
+                        submitHandler(e)
+                    }}>
                         <h2 className='text-lg font-medium mb-2'>What's your email</h2>
                         <input required
                         value={email}

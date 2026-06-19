@@ -63,7 +63,11 @@ function initializeSocket(server) {
     socket.on('update-location-captain', async (data) => {
       const { userId, location } = data;
 
-      if (!location || !location.ltd || !location.lng) {
+      if (
+        !location ||
+        typeof location.ltd !== 'number' ||
+        typeof location.lng !== 'number'
+      ) {
         return socket.emit('error', { message: 'Invalid location data' });
       }
 
@@ -73,6 +77,8 @@ function initializeSocket(server) {
           lng: location.lng
         }
       });
+
+      console.log(`Captain (${userId}) location updated:`, location);
     });
 
     socket.on('disconnect', () => {
