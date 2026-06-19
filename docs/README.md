@@ -1,4 +1,4 @@
-# Uber Clone – Full Stack Application
+# RideNow – Full Stack Application
 
 This repository contains both the **backend** and **frontend** of the Uber clone project.
 The application provides a complete ride-booking experience with separate flows for **users** and **captains**.
