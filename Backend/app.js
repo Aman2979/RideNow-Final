@@ -20,7 +20,7 @@ dotenv.config();
 //  CORS
 const corsOptions = {
   origin: [
-    "https://fullstack-uber-13.onrender.com",
+    // "https://fullstack-uber-13.onrender.com",
     "http://localhost:5173",
     "http://localhost:5174",
   ],
