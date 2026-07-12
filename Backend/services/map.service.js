@@ -1,5 +1,3 @@
-
- 
 import axios from 'axios'
 import captainModel from '../models/caption.models.js';
 
