@@ -22,7 +22,7 @@ const corsOptions = {
   origin: [
     // "https://fullstack-uber-13.onrender.com",
     "http://localhost:5173",
-    "http://localhost:5174",
+    // "http://localhost:5174",
   ],
   methods: ["GET", "POST", "PUT", "DELETE"],
   credentials: true,
